@@ -1,0 +1,5 @@
+# ManiMani
+
+#### Manage your budget
+
+---
