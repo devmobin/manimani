@@ -1,0 +1,25 @@
+{
+  "name": "manimani",
+  "version": "0.5.0",
+  "description": "Manage your budget",
+  "main": "./src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "env-cmd -f ./config/dev.env nodemon src/server.js",
+    "test": "env-cmd -f ./config/test.env jest --runInBand --forceExit --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devmobin/manimani.git"
+  },
+  "keywords": [
+    "rest api",
+    "money management"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/devmobin/manimani/issues"
+  },
+  "homepage": "https://github.com/devmobin/manimani#readme"
+}
