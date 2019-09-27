@@ -110,3 +110,20 @@ test('failure edit user profile', async () => {
     })
     .expect(401)
 })
+
+// delete user profile
+test('success delete user', async () => {
+  await request(app)
+    .delete('/user/me')
+    .set('Authorization', `Bearer ${token}`)
+    .expect(200)
+
+  const user = await User.findById(id)
+  expect(user).toBeNull()
+})
+
+test('failure delete anAuthenticated user', async () => {
+  await request(app)
+    .delete('/user/me')
+    .expect(401)
+})
