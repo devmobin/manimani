@@ -2,6 +2,7 @@ const express = require('express')
 
 const User = require('../model/user')
 const validator = require('../middleware/validator/user')
+const auth = require('../middleware/authentication/auth')
 
 const router = express.Router()
 
@@ -28,5 +29,7 @@ router.post('/login', validator.loginValidation, async ({ body }, res) => {
     res.status(400).send({ error: e.message })
   }
 })
+
+router.get('/me', auth, async ({ user }, res) => res.send(user))
 
 module.exports = router
