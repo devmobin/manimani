@@ -31,6 +31,21 @@ const signupValidation = async ({ body }, res, next) => {
   next()
 }
 
+const loginValidation = ({ body }, res, next) => {
+  if (!body.email || !body.password) {
+    return res.status(400).send({
+      error: 'please enter all the required fields [email, password]'
+    })
+  }
+
+  if (!validator.isEmail(body.email)) {
+    return res.status(400).send({ error: 'please enter valid email' })
+  }
+
+  next()
+}
+
 module.exports = {
-  signupValidation
+  signupValidation,
+  loginValidation
 }

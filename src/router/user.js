@@ -11,11 +11,21 @@ router.post('/signup', validator.signupValidation, async ({ body }, res) => {
   try {
     await user.save()
 
-    const token = await user.generateAuthToken()
-
-    res.status(201).send({ user, token })
+    res.status(201).send({ user })
   } catch (e) {
     res.status(500).send()
+  }
+})
+
+router.post('/login', validator.loginValidation, async ({ body }, res) => {
+  try {
+    const user = await User.loginEmailPass(body.email, body.password)
+
+    const token = await user.generateAuthToken()
+
+    res.status(200).send({ user, token })
+  } catch (e) {
+    res.status(400).send({ error: e.message })
   }
 })
 
