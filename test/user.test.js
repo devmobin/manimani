@@ -1,6 +1,7 @@
 const db = require('./fixtures/db')
 const app = require('../src/app')
 const request = require('supertest')
+const User = require('../src/model/user')
 
 beforeAll(async () => {
   await db.generateFakeData()
@@ -54,6 +55,13 @@ test('success login', async () => {
     })
     .expect(200)
 
+  // read user profile
+  await request(app)
+    .get('/user/me')
+    .set('Authorization', `Bearer ${response.body.token}`)
+    .send()
+    .expect(200)
+
   token = response.body.token
   id = response.body.user._id
 })
@@ -66,4 +74,39 @@ test('failure login invalid password', async () => {
       password: 'mobin12324'
     })
     .expect(400)
+})
+
+// edit user profile test
+test('success edit user profile', async () => {
+  const response = await request(app)
+    .patch('/user/me')
+    .set('Authorization', `Bearer ${token}`)
+    .send({
+      name: 'mobin',
+      email: 'devmobin@gmail.com'
+    })
+    .expect(200)
+
+  expect(id).toEqual(response.body._id)
+  const user = await User.findById(id)
+  expect(user.name).toEqual('mobin')
+  expect(user.email).toEqual('devmobin@gmail.com')
+})
+
+test('failure edit user profile', async () => {
+  await request(app)
+    .patch('/user/me')
+    .set('Authorization', `Bearer ${token}`)
+    .send({
+      location: 'tehran'
+    })
+    .expect(400)
+
+  await request(app)
+    .patch('/user/me')
+    .set('Authorization', `Bearer ${token}w`)
+    .send({
+      name: 'mobin'
+    })
+    .expect(401)
 })
