@@ -45,7 +45,30 @@ const loginValidation = ({ body }, res, next) => {
   next()
 }
 
+const editUserProfile = ({ body }, res, next) => {
+  if (body.email) {
+    if (!validator.isEmail(body.email)) {
+      return res.status(400).send({ error: 'please enter valid email' })
+    }
+  }
+
+  if (body.password) {
+    if (
+      !validator.isLength(validator.trim(body.password), {
+        min: 7,
+        max: 50
+      }) ||
+      body.password.includes('password')
+    ) {
+      return res.status(400).send({ error: 'please enter a better password' })
+    }
+  }
+
+  next()
+}
+
 module.exports = {
   signupValidation,
-  loginValidation
+  loginValidation,
+  editUserProfile
 }

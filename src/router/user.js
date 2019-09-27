@@ -32,4 +32,31 @@ router.post('/login', validator.loginValidation, async ({ body }, res) => {
 
 router.get('/me', auth, async ({ user }, res) => res.send(user))
 
+router.patch(
+  '/me',
+  auth,
+  validator.editUserProfile,
+  async ({ body, user }, res) => {
+    const updates = Object.keys(body)
+    const allowedUpdates = ['name', 'email', 'password']
+    const isValidOperation = updates.every(update =>
+      allowedUpdates.includes(update)
+    )
+
+    if (!isValidOperation) {
+      return res.status(400).send({ error: 'Invalid updates!' })
+    }
+
+    try {
+      updates.forEach(update => (user[update] = body[update]))
+
+      await user.save()
+
+      res.send(user)
+    } catch (e) {
+      res.status(500).send()
+    }
+  }
+)
+
 module.exports = router
