@@ -8,6 +8,9 @@
     "dev": "env-cmd -f ./config/dev.env nodemon src/server.js",
     "test": "env-cmd -f ./config/test.env jest --runInBand --forceExit --watch"
   },
+  "jest": {
+    "testEnvironment": "node"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/devmobin/manimani.git"

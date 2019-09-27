@@ -18,3 +18,5 @@ router.post('/signup', validator.signupValidation, async ({ body }, res) => {
     res.status(500).send()
   }
 })
+
+module.exports = router
