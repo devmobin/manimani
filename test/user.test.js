@@ -47,7 +47,7 @@ test('failure signup user invalid email', async () => {
 
 // login tests
 test('success login', async () => {
-  const response = await request(app)
+  const responseLogin = await request(app)
     .post('/user/login')
     .send({
       email: 'mobin@gmail.com',
@@ -56,14 +56,14 @@ test('success login', async () => {
     .expect(200)
 
   // read user profile
-  await request(app)
+  const response = await request(app)
     .get('/user/me')
-    .set('Authorization', `Bearer ${response.body.token}`)
+    .set('Authorization', `Bearer ${responseLogin.body.token}`)
     .send()
     .expect(200)
 
-  token = response.body.token
-  id = response.body.user._id
+  token = responseLogin.body.token
+  id = response.body._id
 })
 
 test('failure login invalid password', async () => {
@@ -109,6 +109,52 @@ test('failure edit user profile', async () => {
       name: 'mobin'
     })
     .expect(401)
+})
+
+// logout user
+test('success logout user', async () => {
+  await request(app)
+    .get('/user/logout')
+    .set('Authorization', `Bearer ${token}`)
+    .expect(200)
+
+  // login again for logoutAll tests
+  const response = await request(app)
+    .post('/user/login')
+    .send({
+      email: 'devmobin@gmail.com',
+      password: 'mobin1234'
+    })
+
+  token = response.body.token
+})
+
+test('failure logout anAuthenticated user', async () => {
+  await request(app)
+    .get('/user/logout')
+    .expect(401)
+
+  await request(app)
+    .get('/user/logout')
+    .set('Authorization', `Bearer ${token}w`)
+    .expect(401)
+})
+
+test('success logout user from all devices', async () => {
+  await request(app)
+    .get('/user/logoutAll')
+    .set('Authorization', `Bearer ${token}`)
+    .expect(200)
+
+  // login again for delete user tests
+  const response = await request(app)
+    .post('/user/login')
+    .send({
+      email: 'devmobin@gmail.com',
+      password: 'mobin1234'
+    })
+
+  token = response.body.token
 })
 
 // delete user profile
