@@ -24,7 +24,7 @@ router.post('/login', validator.loginValidation, async ({ body }, res) => {
 
     const token = await user.generateAuthToken()
 
-    res.status(200).send({ user, token })
+    res.status(200).send({ token })
   } catch (e) {
     res.status(400).send({ error: e.message })
   }
@@ -58,5 +58,14 @@ router.patch(
     }
   }
 )
+
+router.delete('/me', auth, async ({ user }, res) => {
+  try {
+    await user.remove()
+    res.status(200).send({ user })
+  } catch (e) {
+    res.status(500).send()
+  }
+})
 
 module.exports = router
