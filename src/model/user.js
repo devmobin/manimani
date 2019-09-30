@@ -39,6 +39,12 @@ const userSchema = new mongoose.Schema(
   }
 )
 
+userSchema.virtual('transactions', {
+  ref: 'Transaction',
+  localField: '_id',
+  foreignField: 'owner'
+})
+
 userSchema.methods.toJSON = function() {
   const user = this
   const userObject = user.toObject()

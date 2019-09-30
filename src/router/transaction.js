@@ -22,4 +22,18 @@ router.post(
   }
 )
 
+router.get('/me', async ({ user }, res) => {
+  try {
+    await user
+      .populate({
+        path: 'transactions'
+      })
+      .execPopulate()
+
+    res.status(200).send(user.transactions)
+  } catch (e) {
+    res.status(500).send()
+  }
+})
+
 module.exports = router
