@@ -73,3 +73,25 @@ test('failure read all transactions anAuthenticated user', async () => {
     .send()
     .expect(401)
 })
+
+// read one transaction
+test('success read one transaction', async () => {
+  await request(app)
+    .get(`/transaction/${transactionId}`)
+    .set('Authorization', `Bearer ${token}`)
+    .send()
+    .expect(200)
+})
+
+test('failure read one transaction', async () => {
+  await request(app)
+    .get(`/transaction/${transactionId}`)
+    .send()
+    .expect(401)
+
+  await request(app)
+    .get(`/transaction/${transactionId}q`)
+    .set('Authorization', `Bearer ${token}`)
+    .send()
+    .expect(500)
+})
