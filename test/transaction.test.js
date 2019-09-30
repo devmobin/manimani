@@ -57,3 +57,19 @@ test('failure create new transaction anAuthenticated user', async () => {
     })
     .expect(401)
 })
+
+// read all transactions
+test('success read all transactions', async () => {
+  await request(app)
+    .get('/transaction/me')
+    .set('Authorization', `Bearer ${token}`)
+    .send()
+    .expect(200)
+})
+
+test('failure read all transactions anAuthenticated user', async () => {
+  await request(app)
+    .get('/transaction/me')
+    .send()
+    .expect(401)
+})
