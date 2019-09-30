@@ -36,4 +36,20 @@ router.get('/me', async ({ user }, res) => {
   }
 })
 
+router.get('/:id', async ({ user, params }, res) => {
+  const _id = params.id
+
+  try {
+    const transaction = await Transaction.findOne({ _id, owner: user._id })
+
+    if (!transaction) {
+      return res.status(404).send()
+    }
+
+    res.status(200).send({ transaction })
+  } catch (e) {
+    res.status(500).send()
+  }
+})
+
 module.exports = router
