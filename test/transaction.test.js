@@ -1,8 +1,6 @@
 const db = require('./fixtures/db')
 const app = require('../src/app')
 const request = require('supertest')
-const User = require('../src/model/user')
-const Transaction = require('../src/model/transaction')
 
 beforeAll(async () => {
   await db.generateFakeData()

@@ -1,6 +1,7 @@
 {
   "name": "manimani",
   "version": "0.5.0",
+  "private": true,
   "description": "Manage your budget",
   "main": "./src/server.js",
   "scripts": {
