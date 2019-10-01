@@ -123,3 +123,19 @@ test('failure edit transaction', async () => {
     })
     .expect(400)
 })
+
+// delete transaction
+test('failure delete transaction', async () => {
+  await request(app)
+    .delete(`/transaction/${transactionId}`)
+    .send()
+    .expect(401)
+})
+
+test('success delete transaction', async () => {
+  await request(app)
+    .delete(`/transaction/${transactionId}`)
+    .set('Authorization', `Bearer ${token}`)
+    .send()
+    .expect(200)
+})
