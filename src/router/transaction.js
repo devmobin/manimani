@@ -52,4 +52,31 @@ router.get('/:id', async ({ user, params }, res) => {
   }
 })
 
+router.patch('/:id', async ({ body, user, params }, res) => {
+  const _id = params.id
+  const updates = Object.keys(body)
+  const allowedUpdates = ['title', 'type', 'amount', 'date']
+  const isValidOperation = updates.every(update =>
+    allowedUpdates.includes(update)
+  )
+
+  if (!isValidOperation) {
+    return res.status(400).send({ error: 'Invalid updates!' })
+  }
+
+  try {
+    const transaction = await Transaction.findOne({ _id, owner: user._id })
+
+    if (!transaction) {
+      return res.status(404).send()
+    }
+
+    updates.forEach(update => (transaction[update] = body[update]))
+    await transaction.save()
+    res.send(transaction)
+  } catch (e) {
+    res.status(400).send()
+  }
+})
+
 module.exports = router
