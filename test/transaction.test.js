@@ -95,3 +95,31 @@ test('failure read one transaction', async () => {
     .send()
     .expect(500)
 })
+
+// editing transactions
+test('success edit transaction', async () => {
+  await request(app)
+    .patch(`/transaction/${transactionId}`)
+    .set('Authorization', `Bearer ${token}`)
+    .send({
+      amount: 2500
+    })
+    .expect(200)
+})
+
+test('failure edit transaction', async () => {
+  await request(app)
+    .patch(`/transaction/${transactionId}`)
+    .send({
+      amount: 2500
+    })
+    .expect(401)
+
+  await request(app)
+    .patch(`/transaction/${transactionId}`)
+    .set('Authorization', `Bearer ${token}`)
+    .send({
+      name: 'finish this node project'
+    })
+    .expect(400)
+})
