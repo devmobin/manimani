@@ -3,16 +3,31 @@ const app = require('../src/app')
 const request = require('supertest')
 const User = require('../src/model/user')
 
+const users = [
+  {
+    email: 'mobin@gmail.com',
+    password: 'mobin1234'
+  },
+  {
+    email: 'mobin1@gmail.com',
+    password: 'mobin1234'
+  },
+  {
+    email: 'mobin2@gmail.com',
+    password: 'mobin1234'
+  }
+]
+
 afterAll(async () => {
   await db.cleanupDatabase()
 })
 
 describe('signup tests', () => {
   test.each`
-    email                 | password       | expected
-    ${'mobin@gmail.com'}  | ${'mobin1234'} | ${201}
-    ${'mobin1@gmail.com'} | ${'mobin1234'} | ${201}
-    ${'mobin2@gmail.com'} | ${'mobin1234'} | ${201}
+    email             | password             | expected
+    ${users[0].email} | ${users[0].password} | ${201}
+    ${users[1].email} | ${users[1].password} | ${201}
+    ${users[2].email} | ${users[2].password} | ${201}
   `('success signup users', async ({ email, password, expected }) => {
     await request(app)
       .post('/user/signup')
@@ -33,36 +48,34 @@ describe('signup tests', () => {
   })
 })
 
-// // login tests
-// test('success login', async () => {
-//   const responseLogin = await request(app)
-//     .post('/user/login')
-//     .send({
-//       email: 'mobin@gmail.com',
-//       password: 'mobin1234'
-//     })
-//     .expect(200)
+describe('login tests', () => {
+  test('success login', async () => {
+    const { body } = await request(app)
+      .post('/user/login')
+      .send({
+        email: users[0].email,
+        password: users[0].password
+      })
+      .expect(200)
 
-//   // read user profile
-//   const response = await request(app)
-//     .get('/user/me')
-//     .set('Authorization', `Bearer ${responseLogin.body.token}`)
-//     .send()
-//     .expect(200)
+    // read user profile
+    await request(app)
+      .get('/user/me')
+      .set('Authorization', `Bearer ${body.token}`)
+      .send()
+      .expect(200)
+  })
 
-//   token = responseLogin.body.token
-//   id = response.body._id
-// })
-
-// test('failure login invalid password', async () => {
-//   await request(app)
-//     .post('/user/login')
-//     .send({
-//       email: 'mobin@gmail.com',
-//       password: 'mobin12324'
-//     })
-//     .expect(400)
-// })
+  test('failure login invalid password', async () => {
+    await request(app)
+      .post('/user/login')
+      .send({
+        email: users[0].email,
+        password: 'mobin12324'
+      })
+      .expect(400)
+  })
+})
 
 // // edit user profile test
 // test('success edit user profile', async () => {

@@ -2,10 +2,6 @@ const db = require('./fixtures/db')
 const app = require('../src/app')
 const request = require('supertest')
 
-beforeAll(async () => {
-  await db.generateFakeData()
-}, 1000)
-
 afterAll(async () => {
   await db.cleanupDatabase()
 }, 1000)
@@ -15,7 +11,7 @@ afterAll(async () => {
 let token, transactionId
 
 // create new transaction
-test('success create new transaction', async () => {
+test.only('success create new transaction', async () => {
   // before test transactions create new user
   await request(app)
     .post('/user/signup')
