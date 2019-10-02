@@ -111,33 +111,34 @@ describe('read one transaction', () => {
   })
 })
 
-// // editing transactions
-// test('success edit transaction', async () => {
-//   await request(app)
-//     .patch(`/transaction/${transactionId}`)
-//     .set('Authorization', `Bearer ${token}`)
-//     .send({
-//       amount: 2500
-//     })
-//     .expect(200)
-// })
+describe('editing transactions', () => {
+  test('success edit transaction', async () => {
+    await request(app)
+      .patch(`/transaction/${transactions[0].id}`)
+      .set('Authorization', `Bearer ${await db.getUserToken(user.email)}`)
+      .send({
+        amount: 2500
+      })
+      .expect(200)
+  })
 
-// test('failure edit transaction', async () => {
-//   await request(app)
-//     .patch(`/transaction/${transactionId}`)
-//     .send({
-//       amount: 2500
-//     })
-//     .expect(401)
+  test('failure edit transaction', async () => {
+    await request(app)
+      .patch(`/transaction/${transactions[0].id}`)
+      .send({
+        amount: 2500
+      })
+      .expect(401)
 
-//   await request(app)
-//     .patch(`/transaction/${transactionId}`)
-//     .set('Authorization', `Bearer ${token}`)
-//     .send({
-//       name: 'finish this node project'
-//     })
-//     .expect(400)
-// })
+    await request(app)
+      .patch(`/transaction/${transactions[0].id}`)
+      .set('Authorization', `Bearer ${await db.getUserToken(user.email)}`)
+      .send({
+        name: 'this node project'
+      })
+      .expect(400)
+  })
+})
 
 // // delete transaction
 // test('failure delete transaction', async () => {
