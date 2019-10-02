@@ -77,40 +77,34 @@ describe('login tests', () => {
   })
 })
 
-// // edit user profile test
-// test('success edit user profile', async () => {
-//   const response = await request(app)
-//     .patch('/user/me')
-//     .set('Authorization', `Bearer ${token}`)
-//     .send({
-//       name: 'mobin',
-//       email: 'devmobin@gmail.com'
-//     })
-//     .expect(200)
+describe('edit user profile tests', () => {
+  test('success edit user profile', async () => {
+    const { body: user } = await request(app)
+      .patch('/user/me')
+      .set('Authorization', `Bearer ${await db.getUserToken(users[2].email)}`)
+      .send({
+        name: 'mobin',
+        email: 'devmobin@gmail.com'
+      })
+      .expect(200)
 
-//   expect(id).toEqual(response.body._id)
-//   const user = await User.findById(id)
-//   expect(user.name).toEqual('mobin')
-//   expect(user.email).toEqual('devmobin@gmail.com')
-// })
+    users[2].email = user.email
+    users[2].name = user.name
+  })
 
-// test('failure edit user profile', async () => {
-//   await request(app)
-//     .patch('/user/me')
-//     .set('Authorization', `Bearer ${token}`)
-//     .send({
-//       location: 'tehran'
-//     })
-//     .expect(400)
-
-//   await request(app)
-//     .patch('/user/me')
-//     .set('Authorization', `Bearer ${token}w`)
-//     .send({
-//       name: 'mobin'
-//     })
-//     .expect(401)
-// })
+  test.each`
+    invalidToken | update                    | expected
+    ${''}        | ${{ location: 'tehran' }} | ${400}
+    ${'w'}       | ${{ name: 'nima' }}       | ${401}
+  `('failure edit user profile', async ({ invalidToken, update, expected }) => {
+    const token = await db.getUserToken(users[2].email)
+    await request(app)
+      .patch('/user/me')
+      .set('Authorization', `Bearer ${token}${invalidToken}`)
+      .send(update)
+      .expect(expected)
+  })
+})
 
 // // logout user
 // test('success logout user', async () => {
