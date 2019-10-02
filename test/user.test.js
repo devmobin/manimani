@@ -133,19 +133,21 @@ describe('logout user tests', () => {
   })
 })
 
-// // delete user profile
-// test('success delete user', async () => {
-//   await request(app)
-//     .delete('/user/me')
-//     .set('Authorization', `Bearer ${token}`)
-//     .expect(200)
+describe('delete user profile', () => {
+  test('success delete user', async () => {
+    const id = await db.getUserId(users[0].email)
+    await request(app)
+      .delete('/user/me')
+      .set('Authorization', `Bearer ${await db.getUserToken(users[0].email)}`)
+      .expect(200)
 
-//   const user = await User.findById(id)
-//   expect(user).toBeNull()
-// })
+    const user = await User.findById(id)
+    expect(user).toBeNull()
+  })
 
-// test('failure delete anAuthenticated user', async () => {
-//   await request(app)
-//     .delete('/user/me')
-//     .expect(401)
-// })
+  test('failure delete anAuthenticated user', async () => {
+    await request(app)
+      .delete('/user/me')
+      .expect(401)
+  })
+})
