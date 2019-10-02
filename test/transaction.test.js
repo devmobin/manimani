@@ -71,43 +71,45 @@ describe('create new transactions', () => {
   })
 })
 
-// // read all transactions
-// test('success read all transactions', async () => {
-//   await request(app)
-//     .get('/transaction/me')
-//     .set('Authorization', `Bearer ${token}`)
-//     .send()
-//     .expect(200)
-// })
+describe('read all transactions', () => {
+  test('success read all transactions', async () => {
+    await request(app)
+      .get('/transaction/me')
+      .set('Authorization', `Bearer ${await db.getUserToken(user.email)}`)
+      .send()
+      .expect(200)
+  })
 
-// test('failure read all transactions anAuthenticated user', async () => {
-//   await request(app)
-//     .get('/transaction/me')
-//     .send()
-//     .expect(401)
-// })
+  test('failure read all transactions anAuthenticated user', async () => {
+    await request(app)
+      .get('/transaction/me')
+      .send()
+      .expect(401)
+  })
+})
 
-// // read one transaction
-// test('success read one transaction', async () => {
-//   await request(app)
-//     .get(`/transaction/${transactionId}`)
-//     .set('Authorization', `Bearer ${token}`)
-//     .send()
-//     .expect(200)
-// })
+describe('read one transaction', () => {
+  test('success read one transaction', async () => {
+    await request(app)
+      .get(`/transaction/${transactions[0].id}`)
+      .set('Authorization', `Bearer ${await db.getUserToken(user.email)}`)
+      .send()
+      .expect(200)
+  })
 
-// test('failure read one transaction', async () => {
-//   await request(app)
-//     .get(`/transaction/${transactionId}`)
-//     .send()
-//     .expect(401)
+  test('failure read one transaction', async () => {
+    await request(app)
+      .get(`/transaction/${transactions[0].id}`)
+      .send()
+      .expect(401)
 
-//   await request(app)
-//     .get(`/transaction/${transactionId}q`)
-//     .set('Authorization', `Bearer ${token}`)
-//     .send()
-//     .expect(500)
-// })
+    await request(app)
+      .get(`/transaction/${transactions[0].id}q`)
+      .set('Authorization', `Bearer ${await db.getUserToken(user.email)}`)
+      .send()
+      .expect(500)
+  })
+})
 
 // // editing transactions
 // test('success edit transaction', async () => {
