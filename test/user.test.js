@@ -29,10 +29,15 @@ describe('signup tests', () => {
     ${users[1].email} | ${users[1].password} | ${201}
     ${users[2].email} | ${users[2].password} | ${201}
   `('success signup users', async ({ email, password, expected }) => {
-    await request(app)
+    const {
+      body: { user }
+    } = await request(app)
       .post('/user/signup')
       .send({ email, password })
       .expect(expected)
+
+    expect(user).toEqual(expect.any(Object))
+    expect(user).toHaveProperty('email', email)
   })
 
   test.each`
@@ -50,7 +55,9 @@ describe('signup tests', () => {
 
 describe('login tests', () => {
   test('success login', async () => {
-    const { body } = await request(app)
+    const {
+      body: { token }
+    } = await request(app)
       .post('/user/login')
       .send({
         email: users[0].email,
@@ -61,7 +68,7 @@ describe('login tests', () => {
     // read user profile
     await request(app)
       .get('/user/me')
-      .set('Authorization', `Bearer ${body.token}`)
+      .set('Authorization', `Bearer ${token}`)
       .send()
       .expect(200)
   })
