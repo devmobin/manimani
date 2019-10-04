@@ -363,3 +363,276 @@ this will completely delete user and tasks that related to this user
 this is what you see without token
 
 ---
+
+## what about Transactions?
+
+# Create New Transaction
+
+users signed up for create transactions and here is the way:
+
+- ### URL
+
+  /transaction/new
+
+- ### Method
+
+  ##### `POST`
+
+- ### Data Params
+
+```javascript
+{
+  type: 'income',
+  title: 'project'
+  amount: 2500
+}
+```
+
+- needs token header
+
+you can also send `'date'`.
+but these 3 is required
+
+`date` -> Date()
+
+`type` -> string => 'income' or 'expense'
+
+- ### Success Response:
+  - #### Code: 200
+    #### Content:
+
+```javascript
+{
+    amount: 2500,
+    type: 'income',
+    date: "2019-09-25T16:06:00.570Z",
+    _id: "5d8b90681381132868766c57",
+    title: "project",
+    owner: "5d8b79e31381132868766c52",
+    createdAt: "2019-09-25T16:06:00.570Z",
+    updatedAt: "2019-09-25T16:06:00.570Z",
+    __v: 0
+}
+```
+
+- ### Error Response:
+  - #### Code: 401
+
+this is what you see without token
+
+OR:
+
+- #### Code: 400
+  #### Content:
+
+```javascript
+{
+  error: 'please enter valid type'
+}
+```
+
+---
+
+# Get All User Transactions
+
+return all transactions for this user
+
+- ### URL
+
+  /transaction/me
+
+- ### Method
+
+  ##### `GET`
+
+- only needs Bearer token in header
+
+- ### Success Response:
+
+  - #### Code: 200
+    #### Content:
+
+```javascript
+;[
+  {
+    amount: 2500,
+    type: 'income',
+    date: '2019-09-25T16:06:00.570Z',
+    _id: '5d8b90681381132868766c57',
+    title: 'project',
+    owner: '5d8b79e31381132868766c52',
+    createdAt: '2019-09-25T16:06:00.570Z',
+    updatedAt: '2019-09-25T16:06:00.570Z',
+    __v: 0
+  },
+  {
+    amount: 25000,
+    type: 'expense',
+    date: '2019-09-25T16:06:00.570Z',
+    _id: '5d8b90681381132868766c57',
+    title: 'buy car',
+    owner: '5d8b79e31381132868766c52',
+    createdAt: '2019-09-25T16:06:00.570Z',
+    updatedAt: '2019-09-25T16:06:00.570Z',
+    __v: 0
+  }
+]
+```
+
+- ### Error Response:
+  - #### Code: 401
+
+this is what you see without token
+
+---
+
+# Get Transactions by id
+
+return transaction by id
+
+- ### URL
+
+  /transaction/5d8b90681381132868766c57
+
+- ### Method
+
+  ##### `GET`
+
+- needs Bearer token in header
+
+- ### Success Response:
+
+  - #### Code: 200
+    #### Content:
+
+```javascript
+{
+    amount: 2500,
+    type: 'income',
+    date: '2019-09-25T16:06:00.570Z',
+    _id: '5d8b90681381132868766c57',
+    title: 'project',
+    owner: '5d8b79e31381132868766c52',
+    createdAt: '2019-09-25T16:06:00.570Z',
+    updatedAt: '2019-09-25T16:06:00.570Z',
+    __v: 0
+}
+```
+
+- ### Error Response:
+  - #### Code: 401
+
+this is what you see without token
+
+OR:
+
+- #### Code: 404
+
+when transaction doesn't exist
+
+---
+
+# Edit Transaction
+
+this is for editing transaction by id
+
+- ### URL
+
+  /transaction/5d8b90681381132868766c57
+
+- ### Method
+
+  ##### `PATCH`
+
+- ### Data Params
+
+```javascript
+  {
+    title: 'update project',
+    amount: 3000
+  }
+```
+
+you can edit `'title', 'amount', 'date', 'type'`.
+
+just send anything you want to edit in request body
+
+- ### Success Response:
+  - #### Code: 200
+    #### Content:
+
+```javascript
+{
+    amount: 3000,
+    type: 'income',
+    date: '2019-09-25T16:06:00.570Z',
+    _id: '5d8b90681381132868766c57',
+    title: 'update project',
+    owner: '5d8b79e31381132868766c52',
+    createdAt: '2019-09-25T16:06:00.570Z',
+    updatedAt: '2019-09-25T16:06:00.570Z',
+    __v: 0
+}
+```
+
+- ### Error Response:
+  - #### Code: 401
+
+this is what you see without token
+
+OR:
+
+- #### Code: 400
+  #### Content:
+
+```javascript
+{
+  error: 'Invalid updates!'
+}
+```
+
+when you are editing invalid field in transaction like: `time`
+
+---
+
+# Delete Transaction
+
+this will completely delete the transaction
+
+- ### URL
+
+  /transaction/5d8b90681381132868766c57
+
+- ### Method
+
+  ##### `DELETE`
+
+- needs Bearer token in header
+
+- ### Success Response:
+
+  - #### Code: 200
+    #### Content:
+
+```javascript
+{
+    amount: 3000,
+    type: 'income',
+    date: '2019-09-25T16:06:00.570Z',
+    _id: '5d8b90681381132868766c57',
+    title: 'update project',
+    owner: '5d8b79e31381132868766c52',
+    createdAt: '2019-09-25T16:06:00.570Z',
+    updatedAt: '2019-09-25T16:06:00.570Z',
+    __v: 0
+}
+```
+
+- ### Error Response:
+  - #### Code: 401
+
+this is what you see without token
+
+OR
+
+- #### Code: 404
